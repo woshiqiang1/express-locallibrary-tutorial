@@ -29,8 +29,16 @@ exports.index = function(req, res) {
 };
 
 // 显示完整的藏书列表
-exports.book_list = (req, res) => {
-  res.send('未实现：藏书列表');
+exports.book_list = (req, res, next) => {
+
+  Book.find({}, 'title author')
+    .populate('author')
+    .exec(function (err, list_books) {
+      if (err) { return next(err); }
+      //Successful, so render
+      res.render('book_list', { title: 'Book List', book_list: list_books });
+    });
+    
 };
 
 // 为每种藏书显示详细信息的页面
