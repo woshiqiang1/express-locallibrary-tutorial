@@ -11,7 +11,7 @@ var app = express();
 
 // 设置 Mongoose 连接
 const mongoose = require('mongoose')
-const mongoDB = `mongodb+srv://orange:19900910zc@cluster0-8ecsa.mongodb.net/test?retryWrites=true`
+const mongoDB = `mongodb+srv://orange:19900910zc@cluster0-8ecsa.mongodb.net/local_library?retryWrites=true`
 mongoose.connect(mongoDB,{useNewUrlParser: true})
 mongoose.Promise = global.Promise
 const db = mongoose.connection
