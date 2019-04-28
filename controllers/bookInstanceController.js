@@ -1,4 +1,4 @@
-const BookInstance = require('../models/bookinstance');
+const BookInstance = require('../models/bookInstance');
 
 // 显示完整的藏书副本列表
 exports.bookinstance_list = (req, res) => {

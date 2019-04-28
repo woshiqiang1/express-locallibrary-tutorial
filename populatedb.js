@@ -5,10 +5,10 @@ console.log('此脚本为数据库填充一些测试藏书、作者、藏书种�
 // 从命令行取得参数
 const userArgs = process.argv.slice(2);
 
-/*
- *最新版本的mongodb url 有变化格式为 "mongodb+srv://orange:19900910zc@cluster0-8ecsa.mongodb.net/local_library?retryWrites=true"
+/**
+ * 最新版本的mongodb url 有变化格式为： 
+ * "mongodb+srv://orange:19900910zc@cluster0-8ecsa.mongodb.net/local_library?retryWrites=true"
  */
-
 // if (!userArgs[0].startsWith('mongodb://')) {
 //   console.log('错误：需要指定一个合法的 MongoDB URL 作为第一个参数。');
 //   return;
