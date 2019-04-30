@@ -5,8 +5,7 @@ var BookInstance = require('../models/bookInstance');
 
 var async = require('async');
 
-exports.index = function(req, res) {   
-    
+exports.index = (req, res, next) => {   
     async.parallel({
         book_count: function(callback) {
             Book.count({}, callback); // Pass an empty object as match condition to find all documents of this collection
@@ -42,7 +41,7 @@ exports.book_list = (req, res, next) => {
 };
 
 // 为每种藏书显示详细信息的页面
-exports.book_detail = (req, res) => {
+exports.book_detail = (req, res, next) => {
   res.send('未实现：藏书详细信息：' + req.params.id);
 };
 
