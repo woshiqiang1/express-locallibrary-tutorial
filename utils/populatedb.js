@@ -15,10 +15,10 @@ const userArgs = process.argv.slice(2);
 // }
 
 const async         = require('async');
-const Book          = require('./models/book');
-const Author        = require('./models/author');
-const Genre         = require('./models/genre');
-const BookInstance  = require('./models/bookInstance');
+const Book          = require('../models/book');
+const Author        = require('../models/author');
+const Genre         = require('../models/genre');
+const BookInstance  = require('../models/bookInstance');
 
 const mongoose      = require('mongoose');
 const mongoDB       = userArgs[0];

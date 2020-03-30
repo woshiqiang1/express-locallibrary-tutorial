@@ -11,8 +11,8 @@ const BookInstanceSchema = new Schema({
     status: {
       type: String, 
       required: true, 
-      enum: ['可供借阅', '馆藏维护', '已借出', '保留'], 
-      default: '馆藏维护'
+      enum: ['Maintenance', 'Available', 'Loaned', 'Reserved'], 
+      default: 'Maintenance'
     },
     due_back: {type: Date, default: Date.now}
   }
@@ -20,9 +20,16 @@ const BookInstanceSchema = new Schema({
 
 // 虚拟属性'url'：藏书副本 URL
 BookInstanceSchema
+  .virtual('url')
+  .get(function() {
+    return `/catalog/bookinstance/${this._id}`
+  })
+
+
+BookInstanceSchema
   .virtual('due_back_formatted')
   .get(function () {
-    return moment(this.due_back).format('MMMM Do, YYYY');
+    return moment(this.due_back).format('YYYY-MM-DD');
   });
 
 // 导出 BookInstancec 模型

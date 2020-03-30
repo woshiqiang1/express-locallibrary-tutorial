@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const moment = require('moment');
+
 const Schema = mongoose.Schema;
 const AuthorSchema = new Schema({
   first_name: { type: String, required: true, max: 100 },
@@ -8,19 +10,28 @@ const AuthorSchema = new Schema({
 });
 
 // 虚拟属性 'name'：表示作者全名
-AuthorSchema.virtual("name").get(function() {
+AuthorSchema.virtual("name").get(function () {
   return this.family_name + "," + this.first_name;
 });
 
 // 虚拟属性 'lifespan': 作者寿命
-AuthorSchema.virtual("lifespan").get(() =>
-  (this.date_of_death.getYear() - this.date_of_birth.getYear()).toString()
-);
+AuthorSchema.virtual("lifespan").get(function () {
+  return `${moment(this.date_of_birth).format("MMMM Do, YYYY")} - ${this.date_of_death ? moment(this.date_of_death).format("MMMM Do, YYYY") : 'so far'}`
+});
+  
 
 // 虚拟属性'url'：作者 URL
 AuthorSchema.virtual("url").get(function() {
   return "/catalog/author/" + this._id;
 });
+
+AuthorSchema.virtual("formatted_date_of_birth").get(function() {
+  return moment(this.date_of_birth).format("MMMM Do, YYYY")
+})
+
+AuthorSchema.virtual("formatted_date_of_death").get(function() {
+  return this.date_of_death ? moment(this.date_of_death).format("MMMM Do, YYYY") : 'so far'
+})
 
 // 导出 Author 模型
 module.exports = mongoose.model("Author", AuthorSchema);

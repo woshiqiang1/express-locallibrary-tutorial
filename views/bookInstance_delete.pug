@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 #{title}: #{bookInstance.book.title}
+
+  p ID: #{bookInstance._id}
+
+  p 确定删除这个本书？
+
+  form(method='POST' action='')
+    div.form-group
+      input#authorid.form-control(type='hidden',name='bookInstanceId', required='true', value=bookInstance._id )
+
+      button.btn.btn-primary(type='submit') Delete
