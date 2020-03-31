@@ -51,15 +51,11 @@ exports.author_create_post = [
   body('first_name')
     .isLength({ min: 1 })
     .trim()
-    .withMessage('First name must be specified.')
-    .isAlphanumeric()
-    .withMessage('First name has non-alphanument characters.'),
+    .withMessage('First name must be specified.'),
   body('family_name')
     .isLength({ min: 1 })
     .trim()
-    .withMessage('Family name must be specified.')
-    .isAlphanumeric()
-    .withMessage('Family name has non-alphanumeric characters.'),
+    .withMessage('Family name must be specified.'),
   body('date_of_birth', 'Invalid date of birth')
     .optional({ checkFalsy: true }) 
     .isISO8601(),
@@ -77,7 +73,6 @@ exports.author_create_post = [
   (req, res, next) => {
     // extract the validation errors from a request
     const errors = validationResult(req)
-
     if(!errors.isEmpty()) {
       // there errors, Render form again with sanitize values/errors message
       res.render('author_form', { 
@@ -89,13 +84,13 @@ exports.author_create_post = [
     } else {
       // data from form is valid
       // create an Author object with escaped and trimmed data
-      const { first_name, family_name, date_to_birth, date_to_death } = req.body
+      const { first_name, family_name, date_of_birth, date_of_death } = req.body
       let author = new Author(
         {
           first_name,
           family_name,
-          date_to_birth,
-          date_to_death
+          date_of_birth,
+          date_of_death
       })
       author.save(err => {
         if(err) {
@@ -176,11 +171,74 @@ exports.author_delete_post = (req, res, next) => {
 };
 
 // 由 GET 显示更新作者的表单
-exports.author_update_get = (req, res) => {
-  res.send("未实现：作者更新表单的 GET");
+exports.author_update_get = (req, res, next) => {
+  Author
+    .findById(req.params.id)
+    .exec((err, author) => {
+      if(err) {
+        return next(err)
+      }
+      if(author == null) {
+        let err = new Error('Author not found')
+        err.status = 404
+        return next(err)
+      }
+      res.render('author_form', {
+        title: 'Update Author',
+        author
+      })
+    })
 };
 
 // 由 POST 处理作者更新操作
-exports.author_update_post = (req, res) => {
-  res.send("未实现：更新作者的 POST");
-};
+exports.author_update_post = [
+  // valid fields
+  body('first_name')
+    .isLength({ min: 1 })
+    .trim()
+    .withMessage('First name must be specified.'),
+  body('family_name')
+    .isLength({ min: 1 })
+    .trim()
+    .withMessage('Family name must be specified.'),
+  body('date_of_birth', 'Invalid date of birth')
+    .optional({ checkFalsy: true }) 
+    .isISO8601(),
+  body('date_of_death', 'Invalid date of death')
+    .optional({ checkFalsy: true }) 
+    .isISO8601(), 
+   
+  // sanitize fields
+  sanitizeBody('first_name').trim().escape(),
+  sanitizeBody('family_name').trim().escape(),
+  sanitizeBody('date_of_birth').toDate(),
+  sanitizeBody('date_of_death').toDate(),
+
+  (req, res, next) => {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+      res.render('author_form', { 
+        title: 'Update Author', 
+        author: req.body, 
+        errors: errors.array() 
+      })
+      return
+    } else {
+      const { first_name, family_name, date_of_birth, date_of_death } = req.body
+      let author = new Author(
+        {
+          first_name,
+          family_name,
+          date_of_birth,
+          date_of_death,
+          _id: req.params.id
+      })
+      Author.findByIdAndUpdate(req.params.id, author, {}, (err, theOne) => {
+        if(err) {
+          return next(err)
+        }
+        res.redirect(theOne.url)
+      })
+    }
+  }
+]

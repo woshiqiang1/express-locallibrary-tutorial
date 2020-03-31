@@ -26,11 +26,11 @@ AuthorSchema.virtual("url").get(function() {
 });
 
 AuthorSchema.virtual("formatted_date_of_birth").get(function() {
-  return moment(this.date_of_birth).format("MMMM Do, YYYY")
+  return moment(this.date_of_birth).format("YYYY-MM-DD")
 })
 
 AuthorSchema.virtual("formatted_date_of_death").get(function() {
-  return this.date_of_death ? moment(this.date_of_death).format("MMMM Do, YYYY") : 'so far'
+  return this.date_of_death ? moment(this.date_of_death).format("YYYY-MM-DD") : 'so far'
 })
 
 // 导出 Author 模型
